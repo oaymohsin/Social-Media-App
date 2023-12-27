@@ -1,0 +1,11 @@
+mat-card{
+    width: 80%;
+    display: block;
+    margin: auto;
+    margin-top: 2rem;
+}
+.img-preview>img{
+    width: 200px;
+    margin: 20px;
+    /* border: 2px solid black; */
+}

@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Social-Media-App';
+  Addedposts:any=[]
+
+  onPostAdded(post:any){
+    this.Addedposts.push(post)
+  }
+
 }
