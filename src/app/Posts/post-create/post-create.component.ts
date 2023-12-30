@@ -27,11 +27,11 @@ export class PostCreateComponent {
   }
   onAddPost(){
     const Post={
-      title:this.enteredTitle,
-      content:this.enteredContent
+      title:this.form.value.title,
+      content:this.form.value.content
     }
     this.postService.addPost(Post.title,Post.content)
-    
+    console.log(Post)
   }
 
   onImagePicked(event:Event){
