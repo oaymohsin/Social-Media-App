@@ -15,6 +15,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatToolbarModule} from '@angular/material/toolbar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +34,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatFormFieldModule,
     MatCardModule,
     MatExpansionModule,
-    
+    MatToolbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

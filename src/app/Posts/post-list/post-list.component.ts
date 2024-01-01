@@ -21,7 +21,7 @@ ngOnInit(){
 
 }
 ngOnDestroy(){
-  this.postSub.unSubscribe();
+  this.postSub.unsubscribe();
 }
 
 onDelete(id:string){

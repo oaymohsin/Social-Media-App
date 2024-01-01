@@ -45,6 +45,7 @@ app.post("/api/posts", (req, res, next) => {
     });
   })
   // console.log(posts);
+  
 
   
 });
