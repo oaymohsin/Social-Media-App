@@ -19,7 +19,7 @@ export class PostService {
             return {
               title: post.title,
               content: post.content,
-              id: post._id
+              id: post._id,
             };
           });
         })
@@ -39,15 +39,23 @@ export class PostService {
     return this.postUpdated.asObservable();
   }
   addPost(title: string, content: string) {
-    const post = { title: title, content: content };
+    const post = {id:null, title: title, content: content };
     this.HttpClient.post('http://localhost:3000/api/posts', post)
-
-    .subscribe(
-      (response: any) => {
-        console.log(response.message);
-        this.posts.push(post);
-        this.postUpdated.next([...this.posts]);
-      }
-    );
+    .subscribe((response: any) => {
+      console.log(response.message);
+      const id=response.postId;
+      post.id=id;
+      this.posts.push(post);
+      this.postUpdated.next([...this.posts]);
+    });
+  }
+  deletePost(postId: string) {
+    this.HttpClient.delete(
+      'http://localhost:3000/api/posts/' + postId
+    ).subscribe(() => {
+      const updatedPosts=this.posts.filter((post:any) =>post.id!==postId)
+      this.posts=updatedPosts;
+      this.postUpdated.next([...this.posts])
+    });
   }
 }

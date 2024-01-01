@@ -37,30 +37,45 @@ app.post("/api/posts", (req, res, next) => {
     title: req.body.title,
     content: req.body.content,
   });
-  posts.save();
-  console.log(posts);
+  posts.save().then((savedPost)=>{
+    const postId=savedPost._id;
+    res.status(201).json({
+      message: "Post added Successfully",
+      postId:postId
+    });
+  })
+  // console.log(posts);
 
-  res.status(201).json({
-    message: "Post added Successfully",
-  });
+  
 });
 
 app.get("/api/posts", (req, res, next) => {
-  const posts = [
-    {
-      id: "dsklfsdlk",
-      title: "this is first post",
-      content: "content of first post",
-    },
-    {
-      id: "eriorjkljsfd",
-      title: "this is second post",
-      content: "content of second",
-    },
-  ];
-  res.status(200).json({
-    message: "post fetched successfully",
-    posts: posts,
+  // const posts = [
+  //   {
+  //     id: "dsklfsdlk",
+  //     title: "this is first post",
+  //     content: "content of first post",
+  //   },
+  //   {
+  //     id: "eriorjkljsfd",
+  //     title: "this is second post",
+  //     content: "content of second",
+  //   },
+  // ];
+  postModel.find().then((document) => {
+    res.status(200).json({
+      message: "post fetched successfully",
+      posts: document,
+    });
+  });
+});
+
+app.delete("/api/posts/:id", (req, res, next) => {
+  postModel.deleteOne({ _id: req.params.id }).then((result) => {
+    console.log(result);
+    res.status(200).json({
+      message: "Post Deleted",
+    });
   });
 });
 
