@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
@@ -11,21 +12,39 @@ export class PostService {
   constructor(private HttpClient: HttpClient) {}
 
   getPosts() {
-    this.HttpClient.get('http://localhost:3000/api/posts').subscribe(
-      (datafrombackend: any) => {
-        this.posts = datafrombackend.posts;
-        this.postUpdated.next([...this.posts]);
-      }
-    );
+    this.HttpClient.get('http://localhost:3000/api/posts')
+      .pipe(
+        map((backendResponse: any) => {
+          return backendResponse.posts.map((post: any) => {
+            return {
+              title: post.title,
+              content: post.content,
+              id: post._id
+            };
+          });
+        })
+      )
+      .subscribe(
+        (dataFromBackend: any) => {
+          this.posts = dataFromBackend;
+          this.postUpdated.next([...this.posts]);
+        }
+        // error => {
+        //   console.error('Error fetching posts:', error);
+        //   // Handle errors as needed
+        // }
+      );
   }
   getPostUpdateListener() {
     return this.postUpdated.asObservable();
   }
   addPost(title: string, content: string) {
     const post = { title: title, content: content };
-    this.HttpClient.post('http://localhost:3000/api/posts', post).subscribe(
-      (response:any) => {
-        console.log(response.message)
+    this.HttpClient.post('http://localhost:3000/api/posts', post)
+
+    .subscribe(
+      (response: any) => {
+        console.log(response.message);
         this.posts.push(post);
         this.postUpdated.next([...this.posts]);
       }
