@@ -39,23 +39,33 @@ export class PostService {
     return this.postUpdated.asObservable();
   }
   addPost(title: string, content: string) {
-    const post = {id:null, title: title, content: content };
-    this.HttpClient.post('http://localhost:3000/api/posts', post)
-    .subscribe((response: any) => {
-      console.log(response.message);
-      const id=response.postId;
-      post.id=id;
-      this.posts.push(post);
-      this.postUpdated.next([...this.posts]);
-    });
+    const post = { id: null, title: title, content: content };
+    this.HttpClient.post('http://localhost:3000/api/posts', post).subscribe(
+      (response: any) => {
+        console.log(response.message);
+        const id = response.postId;
+        post.id = id;
+        this.posts.push(post);
+        this.postUpdated.next([...this.posts]);
+      }
+    );
   }
   deletePost(postId: string) {
     this.HttpClient.delete(
       'http://localhost:3000/api/posts/' + postId
     ).subscribe(() => {
-      const updatedPosts=this.posts.filter((post:any) =>post.id!==postId)
-      this.posts=updatedPosts;
-      this.postUpdated.next([...this.posts])
+      const updatedPosts = this.posts.filter((post: any) => post.id !== postId);
+      this.posts = updatedPosts;
+      this.postUpdated.next([...this.posts]);
     });
+  }
+  updatePost(id: string, title: string, content: string) {
+    const post = { id: id, title: title, content: content };
+    this.HttpClient.put('http://localhost:3000/api/posts/' + post.id,post)
+    .subscribe(response => console.log(response));
+  }
+
+  getpost(id: string) {
+    return { ...this.posts.find((p: any) => p.id === id) };
   }
 }
