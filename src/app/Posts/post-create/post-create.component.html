@@ -2,7 +2,8 @@
   <form [formGroup]="form" (submit)="onAddPost()">
     <mat-form-field style="width: 80%">
       <input matInput type="text" formControlName="title"
-      [ngModel]="post.title"
+      
+      value="post.title"
       /> </mat-form-field
     ><br />
     <button mat-stroked-button type="button" (click)="filePicker.click()">
@@ -14,7 +15,7 @@
     </div>
     <mat-form-field style="width: 80%">
       <textarea matInput rows="6" formControlName="content"
-      [ngModel]="post.content"
+      
       
       ></textarea>
     </mat-form-field>

@@ -66,6 +66,7 @@ export class PostService {
   }
 
   getpost(id: string) {
-    return { ...this.posts.find((p: any) => p.id === id) };
+    // return { ...this.posts.find((p: any) => p.id === id) };
+    return this.HttpClient.get('http://localhost:3000/api/posts/' + id);
   }
 }

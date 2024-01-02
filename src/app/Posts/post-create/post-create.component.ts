@@ -22,16 +22,7 @@ export class PostCreateComponent {
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      if (paramMap.has('postId')) {
-        this.mode = 'edit';
-        this.postId = paramMap.get('postId');
-        this.post = this.postService.getpost(this.postId);
-      } else {
-        this.mode = 'create';
-        this.postId = null;
-      }
-    });
+    
 
     this.form = new FormGroup({
       title: new FormControl(null, {
@@ -40,10 +31,33 @@ export class PostCreateComponent {
       content: new FormControl(null, { validators: [Validators.required] }),
       image: new FormControl(null, { validators: [Validators.required] }),
     });
+
+
+    this.route.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('postId')) {
+        this.mode = 'edit';
+        this.postId = paramMap.get('postId');
+        this.postService.getpost(this.postId).subscribe((fetchedpost:any)=>{
+          this.post=fetchedpost.posts;
+          // console.log(this.post)
+          this.form.patchValue({
+            title:this.post.title,
+            content:this.post.content
+          })
+        });
+        // console.log(this.post)
+        
+        
+        
+      } else {
+        this.mode = 'create';
+        this.postId = null;
+      }
+    });
   }
   onAddPost() {
     const Post = {
-      id:this.form.value.id,
+      id: this.form.value.id,
       title: this.form.value.title,
       content: this.form.value.content,
     };
@@ -51,10 +65,10 @@ export class PostCreateComponent {
     if (this.mode === 'create') {
       this.postService.addPost(Post.title, Post.content);
       // console.log(Post);
-    }else{
-      this.postService.updatePost(this.postId,Post.title,Post.content)
+    } else {
+      this.postService.updatePost(this.postId, Post.title, Post.content);
     }
-    this.form.reset()
+    this.form.reset();
   }
 
   onImagePicked(event: Event) {

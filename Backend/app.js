@@ -37,36 +37,30 @@ app.post("/api/posts", (req, res, next) => {
     title: req.body.title,
     content: req.body.content,
   });
-  posts.save().then((savedPost)=>{
-    const postId=savedPost._id;
+  posts.save().then((savedPost) => {
+    const postId = savedPost._id;
     res.status(201).json({
       message: "Post added Successfully",
-      postId:postId
+      postId: postId,
     });
-  })
+  });
   // console.log(posts);
-  
-
-  
 });
 
 app.get("/api/posts", (req, res, next) => {
-  // const posts = [
-  //   {
-  //     id: "dsklfsdlk",
-  //     title: "this is first post",
-  //     content: "content of first post",
-  //   },
-  //   {
-  //     id: "eriorjkljsfd",
-  //     title: "this is second post",
-  //     content: "content of second",
-  //   },
-  // ];
   postModel.find().then((document) => {
     res.status(200).json({
       message: "post fetched successfully",
       posts: document,
+    });
+  });
+});
+
+app.get("/api/posts/:id", (req, res, next) => {
+  postModel.findOne({ _id: req.params.id }).then((post) => {
+    res.status(200).json({
+      message: "post fetched",
+      posts: post,
     });
   });
 });
@@ -84,9 +78,9 @@ app.put("/api/posts/:id", (req, res, next) => {
   const post = new postModel({
     _id: req.body.id,
     title: req.body.title,
-    content: req.body.content
+    content: req.body.content,
   });
-  postModel.updateOne({ _id: req.params.id }, post).then(result => {
+  postModel.updateOne({ _id: req.params.id }, post).then((result) => {
     console.log(result);
     res.status(200).json({ message: "Update successful!" });
   });
