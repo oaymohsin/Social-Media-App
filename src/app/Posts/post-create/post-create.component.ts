@@ -2,7 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { PostService } from 'src/app/Services/post.service';
-
+import { mimeType } from '../post-create/mime-type.validator';
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
@@ -22,33 +22,30 @@ export class PostCreateComponent {
   ) {}
 
   ngOnInit() {
-    
-
     this.form = new FormGroup({
       title: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3)],
       }),
       content: new FormControl(null, { validators: [Validators.required] }),
-      image: new FormControl(null, { validators: [Validators.required] }),
+      image: new FormControl(null, {
+        validators: [Validators.required],
+        // asyncValidators: [mimeType],
+      }),
     });
-
 
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
-        this.postService.getpost(this.postId).subscribe((fetchedpost:any)=>{
-          this.post=fetchedpost.posts;
+        this.postService.getpost(this.postId).subscribe((fetchedpost: any) => {
+          this.post = fetchedpost.posts;
           // console.log(this.post)
           this.form.patchValue({
-            title:this.post.title,
-            content:this.post.content
-          })
+            title: this.post.title,
+            content: this.post.content,
+          });
         });
         // console.log(this.post)
-        
-        
-        
       } else {
         this.mode = 'create';
         this.postId = null;

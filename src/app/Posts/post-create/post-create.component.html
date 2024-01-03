@@ -11,7 +11,7 @@
     </button>
     <input type="file" #filePicker hidden (change)="onImagePicked($event)" />
     <div class="img-preview">
-      <img [src]="imgpreview" alt="" />
+      <img [src]="imgpreview" [alt]="" />
     </div>
     <mat-form-field style="width: 80%">
       <textarea matInput rows="6" formControlName="content"
