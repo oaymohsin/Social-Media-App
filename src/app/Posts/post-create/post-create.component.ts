@@ -41,12 +41,13 @@ export class PostCreateComponent {
           this.post = fetchedpost.posts;
           // console.log(this.post)
           this.form.patchValue({
+            id: this.post._id,
             title: this.post.title,
             content: this.post.content,
             image:this.post.imagePath
             
           });
-          console.log(this.post)
+          // console.log(this.post)
         });
         
       } else {
@@ -65,8 +66,9 @@ export class PostCreateComponent {
 
     if (this.mode === 'create') {
       this.postService.addPost(Post.title, Post.content,Post.image);
-      // console.log(Post);
+      
     } else {
+      console.log(Post);
       this.postService.updatePost(this.postId, Post.title, Post.content,Post.image);
     }
     this.form.reset();

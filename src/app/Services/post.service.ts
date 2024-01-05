@@ -87,7 +87,7 @@ export class PostService {
     }
     // const post = { id: id, title: title, content: content };
     this.HttpClient.put(
-      'http://localhost:3000/api/posts/' + postData.id,
+      'http://localhost:3000/api/posts/' + id,
       postData
     ).subscribe((response:any) => {
       const updatedPosts = [...this.posts];
