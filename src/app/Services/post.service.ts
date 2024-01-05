@@ -20,7 +20,7 @@ export class PostService {
               title: post.title,
               content: post.content,
               id: post._id,
-              imagePath:post.imagePath
+              imagePath: post.imagePath,
             };
           });
         })
@@ -39,24 +39,24 @@ export class PostService {
   getPostUpdateListener() {
     return this.postUpdated.asObservable();
   }
-  addPost(title: string, content: string,image:File) {
+  addPost(title: string, content: string, image: File) {
     // const post = { id: null, title: title, content: content };
     const postData = new FormData();
-    postData.append("title",title);
-    postData.append("content",content);
-    postData.append("image",image)
+    postData.append('title', title);
+    postData.append('content', content);
+    postData.append('image', image);
 
     this.HttpClient.post('http://localhost:3000/api/posts', postData).subscribe(
       (response: any) => {
-        const post={
-          id:response.post.id,
-          title:title,
-          content:content,
-          imagePath:response.post.imagePath
-        }
-          this.posts.push(post);
+        const post = {
+          id: response.post.id,
+          title: title,
+          content: content,
+          imagePath: response.post.imagePath,
+        };
+        this.posts.push(post);
         this.postUpdated.next([...this.posts]);
-        console.log(this.posts)
+        console.log(this.posts);
       }
     );
   }
@@ -69,12 +69,40 @@ export class PostService {
       this.postUpdated.next([...this.posts]);
     });
   }
-  updatePost(id: string, title: string, content: string) {
-    const post = { id: id, title: title, content: content };
+  updatePost(id: string, title: string, content: string, image: File | string) {
+    let postData: any;
+    if (typeof image == 'object') {
+      postData = new FormData();
+      postData.append('id', id);
+      postData.append('title', title);
+      postData.append('content', content);
+      postData.append('image', image);
+    } else {
+      postData = {
+        id: id,
+        title: title,
+        content: content,
+        imagePath:image
+      };
+    }
+    // const post = { id: id, title: title, content: content };
     this.HttpClient.put(
-      'http://localhost:3000/api/posts/' + post.id,
-      post
-    ).subscribe((response) => console.log(response));
+      'http://localhost:3000/api/posts/' + postData.id,
+      postData
+    ).subscribe((response:any) => {
+      const updatedPosts = [...this.posts];
+        const oldPostIndex = updatedPosts.findIndex((p) => p.id === id);
+        const post = {
+          id: id,
+          title: title,
+          content: content,
+          imagePath: response.imagePath,
+        };
+        updatedPosts[oldPostIndex] = post;
+        this.posts = updatedPosts;
+        this.postUpdated.next([...this.posts]);
+        // this.router.navigate(["/"]);
+    });
   }
 
   getpost(id: string) {
