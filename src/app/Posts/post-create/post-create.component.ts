@@ -57,10 +57,11 @@ export class PostCreateComponent {
       id: this.form.value.id,
       title: this.form.value.title,
       content: this.form.value.content,
+      image:this.form.value.image
     };
 
     if (this.mode === 'create') {
-      this.postService.addPost(Post.title, Post.content);
+      this.postService.addPost(Post.title, Post.content,Post.image);
       // console.log(Post);
     } else {
       this.postService.updatePost(this.postId, Post.title, Post.content);

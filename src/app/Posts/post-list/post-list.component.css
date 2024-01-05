@@ -5,3 +5,12 @@ mat-accordion{
     margin-top: 8rem;
 
 }
+.post-image {
+    width: 100%;
+  }
+  
+  .post-image img {
+    width: 700px;
+    height: 500px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+  }

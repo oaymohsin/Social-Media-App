@@ -15,7 +15,7 @@ ngOnInit(){
   this.posts=this.postService.getPosts()
   this.postSub=this.postService.getPostUpdateListener().subscribe((post)=>{
     this.posts=post;
-    // console.log(post)
+    console.log(post)
   })
   // console.log(this.posts)
 

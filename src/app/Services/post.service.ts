@@ -20,6 +20,7 @@ export class PostService {
               title: post.title,
               content: post.content,
               id: post._id,
+              imagePath:post.imagePath
             };
           });
         })
@@ -38,15 +39,24 @@ export class PostService {
   getPostUpdateListener() {
     return this.postUpdated.asObservable();
   }
-  addPost(title: string, content: string) {
-    const post = { id: null, title: title, content: content };
-    this.HttpClient.post('http://localhost:3000/api/posts', post).subscribe(
+  addPost(title: string, content: string,image:File) {
+    // const post = { id: null, title: title, content: content };
+    const postData = new FormData();
+    postData.append("title",title);
+    postData.append("content",content);
+    postData.append("image",image)
+
+    this.HttpClient.post('http://localhost:3000/api/posts', postData).subscribe(
       (response: any) => {
-        console.log(response.message);
-        const id = response.postId;
-        post.id = id;
-        this.posts.push(post);
+        const post={
+          id:response.post.id,
+          title:title,
+          content:content,
+          imagePath:response.post.imagePath
+        }
+          this.posts.push(post);
         this.postUpdated.next([...this.posts]);
+        console.log(this.posts)
       }
     );
   }
@@ -61,8 +71,10 @@ export class PostService {
   }
   updatePost(id: string, title: string, content: string) {
     const post = { id: id, title: title, content: content };
-    this.HttpClient.put('http://localhost:3000/api/posts/' + post.id,post)
-    .subscribe(response => console.log(response));
+    this.HttpClient.put(
+      'http://localhost:3000/api/posts/' + post.id,
+      post
+    ).subscribe((response) => console.log(response));
   }
 
   getpost(id: string) {

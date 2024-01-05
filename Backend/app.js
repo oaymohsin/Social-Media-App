@@ -1,7 +1,9 @@
 const express = require("express");
+const path = require("path");
 const bodyParser = require("body-parser");
 const postModel = require("./Models/postModel");
 const mongoose = require("mongoose");
+const appRoutes = require("./routes/posts");
 const app = express();
 
 // MONGO_URI="mongodb+srv://mohsinmaken3:76510063Msn@cluster0.epwsfar.mongodb.net/"
@@ -18,7 +20,9 @@ mongoose
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+// app.use("/images", express.static("/images"));
+app.use("/images", express.static(path.join(__dirname, 'images')));
+// express.static('/images')
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -32,58 +36,5 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("/api/posts", (req, res, next) => {
-  const posts = new postModel({
-    title: req.body.title,
-    content: req.body.content,
-  });
-  posts.save().then((savedPost) => {
-    const postId = savedPost._id;
-    res.status(201).json({
-      message: "Post added Successfully",
-      postId: postId,
-    });
-  });
-  // console.log(posts);
-});
-
-app.get("/api/posts", (req, res, next) => {
-  postModel.find().then((document) => {
-    res.status(200).json({
-      message: "post fetched successfully",
-      posts: document,
-    });
-  });
-});
-
-app.get("/api/posts/:id", (req, res, next) => {
-  postModel.findOne({ _id: req.params.id }).then((post) => {
-    res.status(200).json({
-      message: "post fetched",
-      posts: post,
-    });
-  });
-});
-
-app.delete("/api/posts/:id", (req, res, next) => {
-  postModel.deleteOne({ _id: req.params.id }).then((result) => {
-    console.log(result);
-    res.status(200).json({
-      message: "Post Deleted",
-    });
-  });
-});
-
-app.put("/api/posts/:id", (req, res, next) => {
-  const post = new postModel({
-    _id: req.body.id,
-    title: req.body.title,
-    content: req.body.content,
-  });
-  postModel.updateOne({ _id: req.params.id }, post).then((result) => {
-    console.log(result);
-    res.status(200).json({ message: "Update successful!" });
-  });
-});
-
+app.use("/api/posts", appRoutes);
 module.exports = app;
