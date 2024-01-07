@@ -11,24 +11,32 @@ export class PostService {
 
   constructor(private HttpClient: HttpClient) {}
 
-  getPosts() {
-    this.HttpClient.get('http://localhost:3000/api/posts')
+  getPosts(postsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
+
+    this.HttpClient.get('http://localhost:3000/api/posts' + queryParams)
       .pipe(
         map((backendResponse: any) => {
-          return backendResponse.posts.map((post: any) => {
+          return{ 
+            posts:backendResponse.posts.map((post: any) => {
             return {
               title: post.title,
               content: post.content,
               id: post._id,
               imagePath: post.imagePath,
             };
-          });
+          }),
+          maxPosts:backendResponse.maxPosts
+        }
         })
       )
       .subscribe(
-        (dataFromBackend: any) => {
-          this.posts = dataFromBackend;
-          this.postUpdated.next([...this.posts]);
+        (transformedPosts: any) => {
+          this.posts = transformedPosts.posts;
+          this.postUpdated.next({
+            posts:[...this.posts],
+            postCount:transformedPosts.maxPosts
+          });
         }
         // error => {
         //   console.error('Error fetching posts:', error);
@@ -76,32 +84,32 @@ export class PostService {
       postData.append('id', id);
       postData.append('title', title);
       postData.append('content', content);
-      postData.append('image', image,title);
+      postData.append('image', image, title);
     } else {
       postData = {
         id: id,
         title: title,
         content: content,
-        imagePath:image
+        imagePath: image,
       };
     }
     // const post = { id: id, title: title, content: content };
     this.HttpClient.put(
       'http://localhost:3000/api/posts/' + id,
       postData
-    ).subscribe((response:any) => {
+    ).subscribe((response: any) => {
       const updatedPosts = [...this.posts];
-        const oldPostIndex = updatedPosts.findIndex((p) => p.id === id);
-        const post = {
-          id: id,
-          title: title,
-          content: content,
-          imagePath: response.imagePath,
-        };
-        updatedPosts[oldPostIndex] = post;
-        this.posts = updatedPosts;
-        this.postUpdated.next([...this.posts]);
-        // this.router.navigate(["/"]);
+      const oldPostIndex = updatedPosts.findIndex((p) => p.id === id);
+      const post = {
+        id: id,
+        title: title,
+        content: content,
+        imagePath: response.imagePath,
+      };
+      updatedPosts[oldPostIndex] = post;
+      this.posts = updatedPosts;
+      this.postUpdated.next([...this.posts]);
+      // this.router.navigate(["/"]);
     });
   }
 
