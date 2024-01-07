@@ -69,13 +69,14 @@ export class PostService {
     );
   }
   deletePost(postId: string) {
-    this.HttpClient.delete(
+    return this.HttpClient.delete(
       'http://localhost:3000/api/posts/' + postId
-    ).subscribe(() => {
-      const updatedPosts = this.posts.filter((post: any) => post.id !== postId);
-      this.posts = updatedPosts;
-      this.postUpdated.next([...this.posts]);
-    });
+    )
+    // .subscribe(() => {
+    //   const updatedPosts = this.posts.filter((post: any) => post.id !== postId);
+    //   this.posts = updatedPosts;
+    //   this.postUpdated.next([...this.posts]);
+    // });
   }
   updatePost(id: string, title: string, content: string, image: File | string) {
     let postData: any;

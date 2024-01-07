@@ -20,7 +20,7 @@ ngOnInit(){
   this.posts=this.postService.getPosts(this.postsPerPage,this.currentPage)
   this.postSub=this.postService.getPostUpdateListener()
   .subscribe((post:any)=>{
-    console.log(post)
+    // console.log(post)
     this.totalPosts=post.postCount;
     this.posts=post.posts
     // console.log(post)
@@ -30,6 +30,7 @@ ngOnInit(){
 }
 
 onChangedPage(pageData:PageEvent){
+  console.log(pageData)
   this.currentPage=pageData.pageIndex+1;
   this.postsPerPage=pageData.pageSize;
   this.postService.getPosts(this.postsPerPage,this.currentPage)
@@ -39,6 +40,8 @@ ngOnDestroy(){
 }
 
 onDelete(id:string){
-  this.postService.deletePost(id)
+  this.postService.deletePost(id).subscribe(()=>{
+    this.postService.getPosts(this.postsPerPage,this.currentPage) 
+  })
 }
 }
