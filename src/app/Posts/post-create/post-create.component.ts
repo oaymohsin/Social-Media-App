@@ -29,7 +29,7 @@ export class PostCreateComponent {
       content: new FormControl(null, { validators: [Validators.required] }),
       image: new FormControl(null, {
         validators: [Validators.required],
-        // asyncValidators: [mimeType],
+        asyncValidators: [mimeType],
       }),
     });
 
@@ -38,10 +38,16 @@ export class PostCreateComponent {
         this.mode = 'edit';
         this.postId = paramMap.get('postId');
         this.postService.getpost(this.postId).subscribe((fetchedpost: any) => {
-          this.post = fetchedpost.posts;
-          // console.log(this.post)
+          let postss = fetchedpost.posts;
+          this.post={
+            id:postss._id,
+            title:postss.title,
+            content:postss.content,
+            imagePath: postss.imagePath
+          }
+          
           this.form.patchValue({
-            id: this.post._id,
+            // id: this.post.id,
             title: this.post.title,
             content: this.post.content,
             image:this.post.imagePath
@@ -57,8 +63,10 @@ export class PostCreateComponent {
     });
   }
   onAddPost() {
+    console.log(this.post)
+    
     const Post = {
-      id: this.form.value.id,
+      // id: this.form.value.id,
       title: this.form.value.title,
       content: this.form.value.content,
       image:this.form.value.image
@@ -68,7 +76,7 @@ export class PostCreateComponent {
       this.postService.addPost(Post.title, Post.content,Post.image);
       
     } else {
-      console.log(Post);
+      // console.log(Post);
       this.postService.updatePost(this.postId, Post.title, Post.content,Post.image);
     }
     this.form.reset();

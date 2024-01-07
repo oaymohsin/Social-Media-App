@@ -1,15 +1,19 @@
 import { AbstractControl } from "@angular/forms";
 import { Observable, Observer, of } from "rxjs";
 
-export const mimeType = (control: AbstractControl): Promise<{ [key: string]: any }> | Observable<{ [key: string]: any }> => {
-  // if (typeof(control.value) === 'string') {
-  //   return of(null);
-  // }
+export const mimeType = (
+  control: AbstractControl
+): Promise<{ [key: string]: any } | null> | Observable<{ [key: string]: any } | null> => {
   const file = control.value as File;
+
+  if (!(file instanceof File)) {
+    // If control value is not a File object, consider it valid (or handle accordingly)
+    return of(null);
+  }
+
   const fileReader = new FileReader();
 
-  // Using the new Observable constructor
-  const frObs = new Observable((observer: Observer<{ [key: string]: any }>) => {
+  const frObs = new Observable((observer: Observer<{ [key: string]: any } | null>) => {
     fileReader.addEventListener("loadend", () => {
       const arr = new Uint8Array(fileReader.result as ArrayBuffer).subarray(0, 4);
       let header = "";
@@ -36,7 +40,7 @@ export const mimeType = (control: AbstractControl): Promise<{ [key: string]: any
       }
 
       if (isValid) {
-        observer.next({});
+        observer.next(null);
       } else {
         observer.next({ invalidMimeType: true });
       }
