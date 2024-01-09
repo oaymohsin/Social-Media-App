@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const postModel = require("./Models/postModel");
 const mongoose = require("mongoose");
 const appRoutes = require("./routes/posts");
+const userRoutes=require('./routes/users')
 const app = express();
 
 // MONGO_URI="mongodb+srv://mohsinmaken3:76510063Msn@cluster0.epwsfar.mongodb.net/"
@@ -37,4 +38,6 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/posts", appRoutes);
+app.use("/api/user", userRoutes);
+
 module.exports = app;

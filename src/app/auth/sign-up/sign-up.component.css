@@ -1,0 +1,10 @@
+mat-card>h1{
+    font-family: Poppins, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 600;
+    font-size:30px;
+    letter-spacing: 2px;
+}
+mat-card{
+    width: 500px;
+    height: 500px;
+}
