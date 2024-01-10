@@ -19,6 +19,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { LoginComponent } from './auth/login/login.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,7 +42,11 @@ import { SignUpComponent } from './auth/sign-up/sign-up.component';
     MatCardModule,
     MatExpansionModule,
     MatToolbarModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    DragDropModule,
+    
+    
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
