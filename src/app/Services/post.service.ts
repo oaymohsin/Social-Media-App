@@ -17,25 +17,27 @@ export class PostService {
     this.HttpClient.get('http://localhost:3000/api/posts' + queryParams)
       .pipe(
         map((backendResponse: any) => {
-          return{ 
-            posts:backendResponse.posts.map((post: any) => {
-            return {
-              title: post.title,
-              content: post.content,
-              id: post._id,
-              imagePath: post.imagePath,
-            };
-          }),
-          maxPosts:backendResponse.maxPosts
-        }
+          return {
+            posts: backendResponse.posts.map((post: any) => {
+              return {
+                title: post.title,
+                content: post.content,
+                id: post._id,
+                imagePath: post.imagePath,
+                creator: post.creator,
+              };
+            }),
+            maxPosts: backendResponse.maxPosts,
+          };
         })
       )
       .subscribe(
         (transformedPosts: any) => {
           this.posts = transformedPosts.posts;
+          // console.log(this.posts)
           this.postUpdated.next({
-            posts:[...this.posts],
-            postCount:transformedPosts.maxPosts
+            posts: [...this.posts],
+            postCount: transformedPosts.maxPosts,
           });
         }
         // error => {
@@ -69,9 +71,7 @@ export class PostService {
     );
   }
   deletePost(postId: string) {
-    return this.HttpClient.delete(
-      'http://localhost:3000/api/posts/' + postId
-    )
+    return this.HttpClient.delete('http://localhost:3000/api/posts/' + postId);
     // .subscribe(() => {
     //   const updatedPosts = this.posts.filter((post: any) => post.id !== postId);
     //   this.posts = updatedPosts;
@@ -92,6 +92,7 @@ export class PostService {
         title: title,
         content: content,
         imagePath: image,
+        creator: null,
       };
     }
     // const post = { id: id, title: title, content: content };
@@ -106,6 +107,7 @@ export class PostService {
         title: title,
         content: content,
         imagePath: response.imagePath,
+        creator: this.posts.creator,
       };
       updatedPosts[oldPostIndex] = post;
       this.posts = updatedPosts;

@@ -4,15 +4,20 @@ const bodyParser = require("body-parser");
 const postModel = require("./Models/postModel");
 const mongoose = require("mongoose");
 const appRoutes = require("./routes/posts");
-const userRoutes=require('./routes/users')
+const userRoutes = require("./routes/users");
+
 const app = express();
 
 // MONGO_URI="mongodb+srv://mohsinmaken3:76510063Msn@cluster0.epwsfar.mongodb.net/"
 const MONGO_URI =
-  "mongodb+srv://mohsinmaken3:76510063Msn@cluster0.epwsfar.mongodb.net/SocialMediaApp";
+  "mongodb+srv://mohsinmaken3:" +
+  process.env.MONGO_ATLAS_PW +
+  "@cluster0.epwsfar.mongodb.net/SocialMediaApp";
 mongoose
   .connect(MONGO_URI)
   .then(() => {
+    console.log(process.env.MONGO_ATLAS_PW)
+
     console.log("conncected successfully");
   })
   .catch(() => {
@@ -22,13 +27,13 @@ mongoose
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use("/images", express.static("/images"));
-app.use("/images", express.static(path.join(__dirname, 'images')));
+app.use("/images", express.static(path.join(__dirname, "images")));
 // express.static('/images')
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin,X-Requested-With,Content-Type,Accept"
+    "Origin,X-Requested-With,Content-Type,Accept,Authorization"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
